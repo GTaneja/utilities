@@ -24,3 +24,22 @@ def merge_dfs(data_frames,**kwargs):
     df_merged = reduce(lambda  left,right: pd.merge(left,right,on=byvars,how=jointype, suffixes=['','_y']), data_frames).fillna(nastring)
     print("Merged df: {0} Listed dfs: {1}".format(df_merged.shape, [ d.shape for d in data_frames]))
     return df_merged
+
+# Function to create windows of words for a CBOW model
+# w: list of strings
+# c: int
+# Example Use: cbow_windows(['i', 'am', 'happy', 'because', 'i', 'am', 'learning'], 2)
+def cbow_window(w, c):
+    i = c
+    while i < len(w) - c:
+        center_w = w[i]
+        context_w = w[(i - c):i] + w[(i+1):(i+c+1)]
+        yield context_w, center_w
+        i += 1
+
+# Using gensim
+def wrd2vec(w, c):
+    from gensim.models import Word2Vec
+    word2vec = Word2Vec(all_words=w, min_count=c)
+    return word2vec
+
